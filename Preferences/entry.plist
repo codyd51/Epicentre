@@ -1,0 +1,10 @@
+{
+    entry = {
+	bundle = Epicentre;
+	cell = PSLinkCell;
+	detail = EpicentreListController;
+	icon = icon.png;
+	isController = 1;
+	label = Epicentre;
+    };
+}

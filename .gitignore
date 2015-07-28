@@ -1,0 +1,9 @@
+Packages/
+*.deb
+.DS_Store
+_/
+obj/
+theos
+.theos
+theos/
+

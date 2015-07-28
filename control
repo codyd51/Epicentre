@@ -1,0 +1,9 @@
+Package: com.phillipt.epicentre
+Name: Epicentre
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: A gorgeous passcode replacement
+Maintainer: Phillip Tennen
+Author: Phillip Tennen
+Section: Tweaks
