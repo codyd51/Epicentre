@@ -19,6 +19,10 @@
 	[self _respring];
 }
 -(void)_respring {
-	system("killall backboardd");
+	  CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
+                                       	   CFSTR("com.phillipt.epicentre.respring"),
+                                       	   nil,
+                                       	   nil,
+                                       	   true);
 }
 @end

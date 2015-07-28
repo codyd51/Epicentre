@@ -22,7 +22,7 @@
 -(void)popStackValue;
 -(void)pushStackValue:(NSString*)value;
 -(BOOL)_evaluateStack;
--(BOOL)_performUnlockActionAnimated:(BOOL)animated;
+-(BOOL)_performUnlockAction;
 -(void)buttonTapped:(EPCDraggableRotaryNumberView*)button;
 -(NSString*)randomDisplayedNumberForActualCharacter:(NSString*)character;
 @end

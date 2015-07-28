@@ -155,6 +155,15 @@
 
 %end
 
+@interface SpringBoard : UIApplication
+@end
+@interface SpringBoard (Private)
+-(void)_relaunchSpringBoardNow;
+@end
+void respring() {
+	[(SpringBoard*)[UIApplication sharedApplication] _relaunchSpringBoardNow];
+}
+
 %ctor {
 	//if the tweak is disabled, quit
 	if (![[EPCPreferences sharedInstance] isEnabled]) return;
@@ -178,6 +187,14 @@
 											  EPCPasscodeChangedAlertHandler* alertHandler = [[EPCPasscodeChangedAlertHandler alloc] init];
 											  [alertHandler displayRespringAlert];
 										  }];
+
+	//listen for respring notification for after above notification is fired
+	CFNotificationCenterAddObserver (CFNotificationCenterGetDarwinNotifyCenter(), 
+									 NULL, 
+									 (CFNotificationCallback)respring, 
+									 CFSTR("com.phillipt.epicentre.respring"), 
+									 NULL, 
+									 0);
 
 	if (![[%c(SBDeviceLockController) sharedController] deviceHasPasscodeSet]) return;
 
