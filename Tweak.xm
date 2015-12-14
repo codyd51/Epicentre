@@ -39,6 +39,8 @@
 
 %hook SBLockScreenView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	//%log;
+
 	%orig;
 
 	BOOL isSwipingTowardsPasscodePage = NO;
@@ -53,6 +55,11 @@
 	else return;
 
 	CGFloat scrollThreshold = (CGRectGetMidX([[UIScreen mainScreen] bounds])) * 0.75; // ~ 140px;
+
+	//NSLog(@"scrollThreshold: %f", scrollThreshold);
+	//NSLog(@"scrollView.contentOffset.x: %f", scrollView.contentOffset.x);
+	//NSLog(@"isSwipingTowardsPasscodePage: %i", (int)isSwipingTowardsPasscodePage);
+
 	if (isSwipingTowardsPasscodePage && scrollView.contentOffset.x < scrollThreshold) {
 		[[EPCRingView sharedRingView] expandAnimated:YES];
 	}
@@ -97,13 +104,13 @@
 	if ([[EPCRingView sharedRingView] _needsSetup]) {
 		SBLockScreenView* lockScreenView = [self lockScreenView];
 		NSLog(@"lockScreenView: %@", lockScreenView);
-		if (!lockScreenView.passcodeView) {
-			[lockScreenView setPasscodeView:[[%c(SBUIPasscodeLockViewWithKeypad) alloc] initWithLightStyle:YES]];
-		}
+		//if (!lockScreenView.passcodeView) {
+		//	[lockScreenView setPasscodeView:[[%c(SBUIPasscodeLockViewWithKeypad) alloc] initWithLightStyle:YES]];
+		//}
 		SBUIPasscodeLockViewWithKeypad* passcodeView = lockScreenView.passcodeView;
 		NSLog(@"passcodeView: %@", passcodeView);
 		//inform them they need to enter their passcode to use Epicentre
-		if (page == 0) {
+		if (page == 99) {
 			if ([passcodeView respondsToSelector:@selector(updateStatusText:subtitle:animated:)]) {
 				[passcodeView updateStatusText:MSHookIvar<UILabel*>(passcodeView, "_statusTitleView").text subtitle:@"Enter your passcode to begin using Epicentre." animated:YES];
 			}
@@ -122,13 +129,16 @@
 		}
 	}
 	else {
-		if (page == 0) {
+		NSLog(@"page: %i", page);
+		if (page == 99) {
 			//scrolled to passcode page
+			NSLog(@"scrolled to passcode page, expanding");
 			[[EPCRingView sharedRingView] expandAnimated:YES];
 		}
 		else {
 			//swiped away from passcode page
-			[[EPCRingView sharedRingView] collapseAnimated:NO];
+			NSLog(@"scrolled away from passcode page, collapsing");
+			[[EPCRingView sharedRingView] collapseAnimated:YES];
 		}
 	}
 }	
@@ -142,6 +152,10 @@
 	//else, use the Main IMP
 	if (o && [[EPCRingView sharedRingView] _needsSetup]) {
 		//set passcode length
+		NSLog(@"Writing passcode info to disk");
+
+		NSLog(@"%i", (int)[[NSFileManager defaultManager] createDirectoryAtPath:@"/var/mobile/Library/Preferences/Epicentre/" withIntermediateDirectories:YES attributes:nil error:nil]);
+
 		[[NSFileManager defaultManager] createFileAtPath:kPasscodeLengthPath contents:[[NSString stringWithFormat:@"%i", (int)passcode.length] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
 
 		NSString* hashedStr = [passcode MD5String];
@@ -151,6 +165,15 @@
 	}
 	return o;
 }
+%end
+
+%hook SpringBoard
+-(void)applicationDidFinishLaunching:(id)application {
+	%orig;
+
+	[[EPCRingView sharedRingView] collapseAnimated:NO];
+}
+
 %end
 
 %end
@@ -198,7 +221,7 @@ void respring() {
 
 	if (![[%c(SBDeviceLockController) sharedController] deviceHasPasscodeSet]) return;
 
-	%init(Main);
-
 	[[EPCRingView sharedRingView] standardSetup];
+
+	%init(Main);
 }

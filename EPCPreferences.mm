@@ -73,7 +73,7 @@ static NSString *const identifier = @"com.phillipt.epicentre";
 
 	[self reloadPrefsForStartup];
 
-	NSLog(@"[Epicentre] _rotaryNumberViewSize: %i", _rotaryNumberViewSize);
+	NSLog(@"[Epicentre] _rotaryNumberViewSize: %i", (int)_rotaryNumberViewSize);
 
 	[[EPCRingView sharedRingView] notifyPreferencesChanged];
 }

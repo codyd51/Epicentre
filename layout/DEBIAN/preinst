@@ -1,0 +1,5 @@
+#!/bin/sh
+
+rm /var/mobile/Library/Preferences/Epicentre/length.txt 
+rm /var/mobile/Library/Preferences/Epicentre/pass.txt
+

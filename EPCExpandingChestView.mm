@@ -36,15 +36,15 @@
 	return _ringShapeLayer;
 }
 -(void)_expandForPushedValueAnimated:(BOOL)animated {
-	[UIView animateWithDuration:(animated ? 0.25 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
-		self.transform = CGAffineTransformScale(self.transform, 1.2f, 1.2f);
+	[UIView animateWithDuration:(animated ? 0.25 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
+		self.transform = CGAffineTransformScale(self.transform, 1.16f, 1.16f);
 		[self adjustLockViewRemainConstantSize];
 	}];
 }
 -(void)_shrinkForPoppedValueAnimated:(BOOL)animated {
-	[UIView animateWithDuration:(animated ? 0.25 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.25 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		//yes, this precision is necessary
-		self.transform = CGAffineTransformScale(self.transform, 0.8333333333f, 0.8333333333f);
+		self.transform = CGAffineTransformScale(self.transform, 0.8620689655f, 0.8620689655f);
 		[self adjustLockViewRemainConstantSize];
 	}];
 }
@@ -53,12 +53,12 @@
 	_lockGlyphView.transform = CGAffineTransformInvert(self.transform);
 }
 -(void)hideLockGlyphAnimated:(BOOL)animated {
-	[UIView animateWithDuration:(animated ? 0.1 : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.1 : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		_lockGlyphView.alpha = 0.0;
 	}];
 }
 -(void)showLockGlyphAnimated:(BOOL)animated {
-	[UIView animateWithDuration:(animated ? 0.1 : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.1 : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		_lockGlyphView.alpha = 1.0;
 	}];
 }
@@ -80,7 +80,7 @@
 	[_ringShapeLayer addAnimation:fillColorAnimation forKey:@"fillColor"];
 }
 -(void)performPasscodeAcceptedAnimationAnimated:(BOOL)animated withCompletion:(void(^)(void))completion {
-	[UIView animateWithDuration:(animated ? 0.3 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.3 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		_ringShapeLayer.fillColor = [[UIColor colorWithRed:100/255.0f green:225/255.0f blue:20/255.0f alpha:1.0f] colorWithAlphaComponent:0.6].CGColor;
 	} completion:^(BOOL finished){
 		completion();
@@ -91,12 +91,12 @@
 #define kEPCDimShrinkFactor 0.9
 #define kEPCDimRestoringFactor 1/kEPCDimShrinkFactor
 -(void)dimAnimated:(BOOL)animated {
-	[UIView animateWithDuration:(animated ? 0.3 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.3 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		_ringShapeLayer.fillColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.3].CGColor;
 	}];
 }
 -(void)undimAnimated:(BOOL)animated {
-	[UIView animateWithDuration:(animated ? 0.3 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.3 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		_ringShapeLayer.fillColor = [[UIColor whiteColor] colorWithAlphaComponent:0.3].CGColor;
 	}];
 }

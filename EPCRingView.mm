@@ -33,6 +33,7 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 -(id)initWithFrame:(CGRect)frame {
 	if (self = [super initWithFrame:frame]) {
 		_needsSetup = NO;
+		_isExpanded = YES;
 	}
 	return self;
 }
@@ -73,6 +74,9 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 -(void)_setCachedPassword:(NSString*)pass {
 	_cachedMD5Pass = pass;
 	_cachedMD5PassUnhashedLength = [[NSString alloc] initWithData:[[NSFileManager defaultManager] contentsAtPath:kPasscodeLengthPath] encoding:NSUTF8StringEncoding];
+
+	NSLog(@"_cachedMD5Pass: %@", _cachedMD5Pass);
+	NSLog(@"_cachedMD5PassUnhashedLength: %@", _cachedMD5PassUnhashedLength);
 }
 -(NSArray*)_mappedButtonPositionsForRadius:(CGFloat)radius {
 	NSMutableArray* result = [[NSMutableArray alloc] init];
@@ -121,7 +125,7 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 	[_buttons removeObjectAtIndex:poppedValue.intValue];
 	[_buttons insertObject:newNumberView atIndex:poppedValue.intValue];
 	[self disintegrateNumberView:numberView animated:animated withCompletion:^{	
-		[UIView animateWithDuration:(animated ? 0.075 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? 0.075 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			newNumberView.alpha = 1.0;
 		} completion:nil];
 		[self snapNumberViewToDesignatedPosition:newNumberView animated:animated];
@@ -155,6 +159,7 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 		NSLog(@"inside completion block");
 		//[attemptToUnlockUIFromNotification];
 		ret = [[objc_getClass("SBLockScreenManager") sharedInstance] attemptUnlockWithPasscode:_enteredStack];
+		NSLog(@"ret: %i", ret);
 	}];
 	return ret;
 }
@@ -162,7 +167,7 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 	[_chestView performActionDisallowedAnimationAnimated:animated];
 
 	//reset size and clear stack
-	[UIView animateWithDuration:(animated ? 0.4 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.4 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		for (int i = 0; i < _enteredStack.length; i++) {
 			[_chestView _shrinkForPoppedValueAnimated:animated];
 		}
@@ -208,12 +213,12 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 						_buttons[7], 
 						_buttons[8]];
 
-	[UIView animateWithDuration:(animated ? 0.1 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.1 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		for (EPCDraggableRotaryNumberView* numberView in _buttons) {
 			numberView.alpha = 0.0;
 		}
 	}];
-	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseOneDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseOneDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		_chestView.transform = CGAffineTransformIdentity;
 		[_chestView showLockGlyphAnimated:animated];
 		[_chestView _setInitialLockGlyphSize];
@@ -225,21 +230,21 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 			numberView.alpha = 1.0;
 		}
 	} completion:^(BOOL finished){
-		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			for (int i = 0; i < group1.count; i++) {
 				EPCDraggableRotaryNumberView* numberView = group1[i];
 				numberView.frame = CGRectFromString(springIn1[[_buttons indexOfObject:numberView]]);
 				numberView.alpha = 1.0;
 			}
 		} completion:^(BOOL finished){
-			[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+			[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 				for (int i = 0; i < group1.count; i++) {
 					EPCDraggableRotaryNumberView* numberView = group1[i];
 					numberView.frame = CGRectFromString(springOut2[[_buttons indexOfObject:numberView]]);
 					numberView.alpha = 1.0;
 				}
 			} completion:^(BOOL finished){
-				[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+				[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 					for (int i = 0; i < group1.count; i++) {
 						EPCDraggableRotaryNumberView* numberView = group1[i];
 						numberView.frame = CGRectFromString(final[[_buttons indexOfObject:numberView]]);
@@ -249,28 +254,28 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 			}];
 		}];
 	}];
-	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseTwoDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseTwoDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		for (int i = 0; i < group2.count; i++) {
 			EPCDraggableRotaryNumberView* numberView = group2[i];
 			numberView.frame = CGRectFromString(springOut1[[_buttons indexOfObject:numberView]]);
 			numberView.alpha = 1.0;
 		}
 	} completion:^(BOOL finished){
-		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			for (int i = 0; i < group2.count; i++) {
 				EPCDraggableRotaryNumberView* numberView = group2[i];
 				numberView.frame = CGRectFromString(springIn1[[_buttons indexOfObject:numberView]]);
 				numberView.alpha = 1.0;
 			}
 		} completion:^(BOOL finished){
-			[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+			[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 				for (int i = 0; i < group2.count; i++) {
 					EPCDraggableRotaryNumberView* numberView = group2[i];
 					numberView.frame = CGRectFromString(springOut2[[_buttons indexOfObject:numberView]]);
 					numberView.alpha = 1.0;
 				}
 			} completion:^(BOOL finished){
-				[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+				[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 					for (int i = 0; i < group2.count; i++) {
 						EPCDraggableRotaryNumberView* numberView = group2[i];
 						numberView.frame = CGRectFromString(final[[_buttons indexOfObject:numberView]]);
@@ -280,28 +285,28 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 			}];
 		}];
 	}];
-	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseThreeDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseThreeDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		for (int i = 0; i < group3.count; i++) {
 			EPCDraggableRotaryNumberView* numberView = group3[i];
 			numberView.frame = CGRectFromString(springOut1[[_buttons indexOfObject:numberView]]);
 			numberView.alpha = 1.0;
 		}
 	} completion:^(BOOL finished){
-		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			for (int i = 0; i < group3.count; i++) {
 				EPCDraggableRotaryNumberView* numberView = group3[i];
 				numberView.frame = CGRectFromString(springIn1[[_buttons indexOfObject:numberView]]);
 				numberView.alpha = 1.0;
 			}
 		} completion:^(BOOL finished){
-			[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+			[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 				for (int i = 0; i < group3.count; i++) {
 					EPCDraggableRotaryNumberView* numberView = group3[i];
 					numberView.frame = CGRectFromString(springOut2[[_buttons indexOfObject:numberView]]);
 					numberView.alpha = 1.0;
 				}
 			} completion:^(BOOL finished){
-				[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+				[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 					for (int i = 0; i < group3.count; i++) {
 						EPCDraggableRotaryNumberView* numberView = group3[i];
 						numberView.frame = CGRectFromString(final[[_buttons indexOfObject:numberView]]);
@@ -331,7 +336,7 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 	2, 3, 7, 8
 	*/
 
-	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseOneDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseOneDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		((EPCDraggableRotaryNumberView*)_buttons[0]).frame = CGRectFromString(collapsedPosition[0]);
 		((EPCDraggableRotaryNumberView*)_buttons[5]).frame = CGRectFromString(collapsedPosition[5]);
 	}];
@@ -341,23 +346,26 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 			((EPCDraggableRotaryNumberView*)_buttons[5]).alpha = 0.0;
 		}];
 	});
-	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseTwoDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseTwoDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		((EPCDraggableRotaryNumberView*)_buttons[1]).frame = CGRectFromString(collapsedPosition[1]);
 		((EPCDraggableRotaryNumberView*)_buttons[4]).frame = CGRectFromString(collapsedPosition[4]);
 		((EPCDraggableRotaryNumberView*)_buttons[6]).frame = CGRectFromString(collapsedPosition[6]);
 		((EPCDraggableRotaryNumberView*)_buttons[9]).frame = CGRectFromString(collapsedPosition[8]);
 	}];
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (animated ? kEPCSpringAnimationPhaseTwoDuration - 0.225 : 0.0) * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-		[UIView animateWithDuration:(animated ? 0.1 : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? 0.1 : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			((EPCDraggableRotaryNumberView*)_buttons[1]).alpha = 0.0;
 			((EPCDraggableRotaryNumberView*)_buttons[4]).alpha = 0.0;
 			((EPCDraggableRotaryNumberView*)_buttons[6]).alpha = 0.0;
 			((EPCDraggableRotaryNumberView*)_buttons[9]).alpha = 0.0;
 		}];
 	});
-	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseThreeDuration : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? kEPCSpringAnimationPhaseThreeDuration : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		//shrink the chest view
+		NSLog(@"_chestView: %@", _chestView);
+		NSLog(@"_chestView.transform: %@", NSStringFromCGAffineTransform(_chestView.transform));
 		_chestView.transform = CGAffineTransformScale(_chestView.transform, 0.2, 0.2);
+		NSLog(@"_chestView.transform: %@", NSStringFromCGAffineTransform(_chestView.transform));
 		[_chestView hideLockGlyphAnimated:animated];
 
 		((EPCDraggableRotaryNumberView*)_buttons[2]).frame = CGRectFromString(collapsedPosition[2]);
@@ -366,7 +374,7 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 		((EPCDraggableRotaryNumberView*)_buttons[8]).frame = CGRectFromString(collapsedPosition[9]);
 	}];
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (animated ? kEPCSpringAnimationPhaseThreeDuration - 0.225 : 0.0) * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-		[UIView animateWithDuration:(animated ? 0.1 : 0.0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? 0.1 : 0.0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			((EPCDraggableRotaryNumberView*)_buttons[2]).alpha = 0.0;
 			((EPCDraggableRotaryNumberView*)_buttons[3]).alpha = 0.0;
 			((EPCDraggableRotaryNumberView*)_buttons[7]).alpha = 0.0;
@@ -428,7 +436,7 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 	}
 }
 -(void)snapNumberViewToDesignatedPosition:(EPCDraggableRotaryNumberView*)numberView animated:(BOOL)animated {
-	[UIView animateWithDuration:(animated ? 0.8 : 0) delay:0.0 usingSpringWithDamping:0.6 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.8 : 0) delay:0.0 usingSpringWithDamping:0.6 initialSpringVelocity:0.0 options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		numberView.frame = CGRectFromString([self mappedFinalButtonPositions][numberView.character.intValue]);
 	} completion:nil];
 }
@@ -475,19 +483,19 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 	//shrinks back down, a bit too small
 	//grows again, just a tad too big
 	//shrinks back to correct size
-	[UIView animateWithDuration:(animated ? 0.1 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.1 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		newNumberView.alpha = 1.0;
 	}];
-	[UIView animateWithDuration:(animated ? 0.2 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? 0.2 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		newNumberView.transform = CGAffineTransformScale(t, 1.12f, 1.12f);
 	} completion:^(BOOL finished){
-		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			newNumberView.transform = CGAffineTransformScale(t, 0.85f, 0.85f);
 		} completion:^(BOOL finished){
-			[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+			[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 				newNumberView.transform = CGAffineTransformScale(t, 1.05f, 1.05f);
 			} completion:^(BOOL finished){
-				[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+				[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 					newNumberView.transform = CGAffineTransformIdentity;
 					//ensure it didn't drift
 					newNumberView.center = CGPointMake(CGRectGetMidX(newFrame), CGRectGetMidY(newFrame));
@@ -503,13 +511,13 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 }
 -(void)disintegrateNumberView:(EPCDraggableRotaryNumberView*)numberView animated:(BOOL)animated withCompletion:(void(^)(void))completion {
 	CGAffineTransform t = numberView.transform;
-	[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+	[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 		numberView.transform = CGAffineTransformScale(t, 1.15f, 1.15f);
 	} completion:^(BOOL finished){
-		[UIView animateWithDuration:(animated ? 0.3 : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? 0.3 : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			numberView.alpha = 0.0;
 		}];
-		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:UIViewAnimationOptionAllowUserInteraction animations:^{
+		[UIView animateWithDuration:(animated ? kEPCSpringBounceAnimationDuration : 0) options:(UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent) animations:^{
 			numberView.transform = CGAffineTransformScale(numberView.transform, 0.001f, 0.001f);
 		} completion:^(BOOL finished){
 			if (finished) {
@@ -526,11 +534,17 @@ CGPoint calculatedPlacement(CGFloat index, CGFloat totalCount, CGFloat radius, C
 	[self reloadUIElements];
 	[self _retreivePasswordCache];
 }
+-(BOOL)isExpanded {
+	return _isExpanded;
+}
 -(void)_retreivePasswordCache {
 	//set the hashed password to the ring view's cached pass
 	NSString* hashedPass = [[NSString alloc] initWithData:[[NSFileManager defaultManager] contentsAtPath:kPasscodePath] encoding:NSUTF8StringEncoding];
 	NSLog(@"hashedPass: %@", hashedPass);
-	if (![[NSFileManager defaultManager] fileExistsAtPath:kPasscodePath]) [self _setNeedsSetup:YES];
+	if (![[NSFileManager defaultManager] fileExistsAtPath:kPasscodePath]) {
+		[self _setNeedsSetup:YES];
+	}
+	
 	[self _setCachedPassword:hashedPass];
 }
 -(void)reloadUIElements {

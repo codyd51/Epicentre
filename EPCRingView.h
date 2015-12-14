@@ -12,7 +12,8 @@
 	NSMutableString* _enteredStack;
 	BOOL _needsSetup;
 }
-+(id)sharedRingView;
+@property (nonatomic, assign, readonly) BOOL isExpanded;
++(instancetype)sharedRingView;
 -(NSArray*)mappedFinalButtonPositions;
 -(NSArray*)mappedCollapsedButtonPositions;
 -(void)expandAnimated:(BOOL)animated;

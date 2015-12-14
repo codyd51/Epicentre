@@ -18,8 +18,8 @@
 #define kEPCSpringAnimationPhaseTwoDuration 0.35
 #define kEPCSpringAnimationPhaseThreeDuration 0.4
 #define kEPCSpringBounceAnimationDuration 0.15
-#define kPasscodePath @"/Library/Application Support/Epicentre/pass.txt"
-#define kPasscodeLengthPath @"/Library/Application Support/Epicentre/length.txt"
+#define kPasscodePath 					@"/var/mobile/Library/Preferences/Epicentre/pass.txt"
+#define kPasscodeLengthPath 			@"/var/mobile/Library/Preferences/Epicentre/length.txt"
 #define kEPCExpandingChestViewLockGlyph @"/Library/Application Support/Epicentre/lock"
 
 //md5 additions
@@ -100,6 +100,7 @@ static char kNSCBAlertWrapper;
 @interface SBUIFourDigitPasscodeEntryField : UIView
 @end
 @interface SBLockScreenScrollView : UIScrollView
+@property (nonatomic, retain) UIView* passcodeView;
 @end
 @interface SBUIPasscodeLockViewWithKeypad : UIView
 -(id)initWithLightStyle:(BOOL)style;
